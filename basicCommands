@@ -1,0 +1,5 @@
+# Basic commands to navigate through the project
+Use git clone <repository link> to clone into the repository
+Make sure to cd into the correct directory "cd VideoGameRentalDatabase
+Use git pull to stay up to date with any changes made to the project
+Use git checkout <branch name> to get into your specific branch
