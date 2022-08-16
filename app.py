@@ -113,7 +113,6 @@ class Home(tk.Frame):
             if(len(matchlst) == 0):
                print("empty list")
             else:
-               #return
                print("match found" , matchlst)
 
             sql = "select console_id from console where console_name = %s"
@@ -151,16 +150,12 @@ class Home(tk.Frame):
                   sql = """INSERT INTO videogame_rental.order (title, rental_rate) VALUES (%s, %s)"""
                   li = list(label.split("}"))
 
-                  print("this is type l ", li)
-
                   for x in li:
                      my_conn.execute(sql, li)
                      result = my_conn.fetchall()
 
                      # Commit your changes in the database
                      my_connect.commit()
-
-                     print("this is result ", *result)
 
 
                selectButton = tk.Button(top, text="Select", command=select)
@@ -231,7 +226,7 @@ class Staff(tk.Frame):
 
          for info in result:
             if(uname in info and pname in info):
-               parent.switchFrame(Home)
+               parent.switchFrame(StaffHome)
                return
          if(uname=="" and pname==""):
             messagebox.showinfo("Required field empty!")
@@ -244,7 +239,7 @@ class Staff(tk.Frame):
 
          my_connect.commit()
 
-      loginButton = tk.Button(root, text="Login", command=lambda:[staffLogin(), parent.switchFrame(StaffHome)])
+      loginButton = tk.Button(root, text="Login", command=staffLogin)
       loginButton.grid(row=3, column=0, columnspan=2, pady=10, padx=10, ipadx=100)
 
       backButton = tk.Button(root, text="Back", command=lambda: parent.switchFrame(Start))
@@ -267,15 +262,13 @@ class Account(tk.Frame):
       my_w = tk.Tk()
       my_w.geometry("760x350")
 
-      sql = "select * from customer"
+      sql = "select first_name, last_name from customer"
       my_conn.execute(sql)
 
       results = my_conn.fetchall()
-      #print(results)
 
       i=0
       for account in results:
-         #print("this is account ", account)
          for j in range(len(account)):
             e = Label(my_w, width=20, fg='black', text=account[j], relief='ridge', anchor="w")
             e.grid(row=i, column=j)
@@ -303,11 +296,9 @@ class Inventory(tk.Frame):
       my_conn.execute(sql)
 
       results = my_conn.fetchall()
-      #print(results)
 
       i=0
       for account in results:
-         #print("this is account ", account)
          for j in range(len(account)):
             e = Label(my_w, width=18, fg='black', text=account[j], relief='ridge', anchor="w")
             e.grid(row=i, column=j)
@@ -410,41 +401,47 @@ class Register(tk.Frame):
       tk.Frame.__init__(root, parent)
 
       # Create text boxes
+      customer_id = tk.Entry(root, width=30)
+      customer_id.grid(row=0, column=1, padx=20)
+
       username = tk.Entry(root, width=30)
-      username.grid(row=0, column=1, padx=20)
+      username.grid(row=1, column=1, padx=20)
 
       password = tk.Entry(root, width=30)
-      password.grid(row=1, column=1)
+      password.grid(row=2, column=1)
 
       first_name = tk.Entry(root, width=30)
-      first_name.grid(row=2, column=1)
+      first_name.grid(row=3, column=1)
 
       last_name = tk.Entry(root, width=30)
-      last_name.grid(row=3, column=1)
+      last_name.grid(row=4, column=1)
 
       email = tk.Entry(root, width=30)
-      email.grid(row=4, column=1)
+      email.grid(row=5, column=1)
 
       # Create text labels
+      customerIdLabel = tk.Label(root, text="Customer ID: ")
+      customerIdLabel.grid(row=0, column=0)
+
       usernameLabel = tk.Label(root, text="Username: ")
-      usernameLabel.grid(row=0, column=0)
+      usernameLabel.grid(row=1, column=0)
 
       passwordLabel = tk.Label(root, text="Password: ")
-      passwordLabel.grid(row=1, column=0)
+      passwordLabel.grid(row=2, column=0)
       
       first_nameLabel = tk.Label(root, text="First Name: ")
-      first_nameLabel.grid(row=2, column=0)
+      first_nameLabel.grid(row=3, column=0)
 
       last_nameLabel = tk.Label(root, text="Last Name: ")
-      last_nameLabel.grid(row=3, column=0)
+      last_nameLabel.grid(row=4, column=0)
       
       emailLabel = tk.Label(root, text="Email: ")
-      emailLabel.grid(row=4, column=0)
+      emailLabel.grid(row=5, column=0)
 
       def Insert():
          # Insert into table
-         sql = "INSERT INTO customer (username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s)"
-         val = (username.get(), password.get(), first_name.get(), last_name.get(), email.get())
+         sql = "INSERT INTO customer (customer_id, username, password, first_name, last_name, email) VALUES (%s, %s, %s, %s, %s, %s)"
+         val = (customer_id.get(), username.get(), password.get(), first_name.get(), last_name.get(), email.get())
 
          my_conn.execute(sql, val)
 
@@ -452,6 +449,7 @@ class Register(tk.Frame):
          my_connect.commit()
 
          # Clear text boxes
+         customer_id.delete(0, END)
          username.delete(0, END)
          password.delete(0, END)
          first_name.delete(0, END)
@@ -459,10 +457,10 @@ class Register(tk.Frame):
          email.delete(0, END)
 
       registerButton = tk.Button(root, text="Register", command=lambda:[Insert(), parent.switchFrame(Start)])
-      registerButton.grid(row=5, column=0, columnspan=2, pady=10, padx=10)
+      registerButton.grid(row=6, column=0, columnspan=2, pady=10, padx=10)
 
       backButton = tk.Button(root, text="Back", command=lambda: parent.switchFrame(Start))
-      backButton.grid(row=6, column=0, columnspan=2, pady=10, padx=10)
+      backButton.grid(row=7, column=0, columnspan=2, pady=10, padx=10)
 
 if __name__ == "__main__":
    root = Frames()
